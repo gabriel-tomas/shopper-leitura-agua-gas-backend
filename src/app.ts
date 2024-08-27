@@ -2,8 +2,12 @@ import dotenv from 'dotenv';
 import { resolve } from 'path';
 import express, { Application, Request, Response } from 'express'; 
 import helmet from 'helmet';
+import knexFile from '../knexfile';
+import knex from 'knex';
 
 dotenv.config({ path: resolve(__dirname, '..', '.env') });
+
+export const knexMySQL = knex(knexFile);
 
 class App {
   public app: Application;
@@ -16,17 +20,14 @@ class App {
   }
 
   private databaseConnection(): void {
-    /*
-    mongoose.connect(process.env.CONNECTIONSTRING as string)
-      .then(() => {
-        console.log('Conexão com DB obtida com sucesso!');
-        this.app.emit('database_connected');
-      })
-      .catch((error) => {
-        console.log('ERROR: erro na conexão com o DB');
-        console.log(error);
-      });
-    */
+    knexMySQL.raw("SELECT 1").then(() => {
+      console.log('Conexão com DB obtida com sucesso!');
+      this.app.emit('database_connected');
+    })
+    .catch((err) => {
+      console.log('ERROR: erro na conexão com o DB');
+      console.error(err);
+    });
   }
 
   private middleware(): void {

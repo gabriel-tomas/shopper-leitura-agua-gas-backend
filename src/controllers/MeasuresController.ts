@@ -14,15 +14,20 @@ class MeasuresController {
     const body: MeasureBody = req.body;
     try {
       const measure = new Measure(body);
-      await measure.create();
+      const response = await measure.create();
       if (measure.errors) {
         return res.status(400).json({
-          "error_code": "INVALID_DATA",
-          "error_description": measure.errors.trim()
+          error_code: measure.error_code,
+          error_description: measure.errors.trim()
         });
       }
+      return res.json(response);
     } catch(err) {
-
+      console.log(err);
+      return res.status(500).json({
+        error_code: 'UNKNOWN_ERROR',
+        error_description: 'Ocorreu um erro desconhecido :('
+      });
     }
     res.send();
   }

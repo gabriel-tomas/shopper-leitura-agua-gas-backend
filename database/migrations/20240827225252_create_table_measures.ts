@@ -8,6 +8,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('measure_type').notNullable();
     table.string('measure_value').notNullable();
     table.boolean('has_confirmed').nullable().defaultTo(false);
+    table.string('image_url').notNullable();
 
     table.string('fk_customer_code', 100).notNullable();
     table.foreign('fk_customer_code')

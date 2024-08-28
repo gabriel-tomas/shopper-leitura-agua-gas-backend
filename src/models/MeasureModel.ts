@@ -1,5 +1,6 @@
 import { converBase64ToImage } from "convert-base64-to-image";
 import path from "path";
+import { v4 as uuidv4 } from 'uuid';
 
 import { knex } from "../app";
 
@@ -10,9 +11,11 @@ import { generateGenAiContent } from "../utils/generateGenAiContent";
 import { validateBase64 } from "../utils/validateBase64";
 
 import { MeasureBody } from "../controllers/MeasuresController";
+import { aiMeasurePrompt } from "../config/aiMeasurePropmt";
 
 class Measure {
   private _errors: string = '';
+  private _error_code: string = '';
 
   constructor(private body: MeasureBody) {}
 
@@ -20,15 +23,33 @@ class Measure {
     return this._errors;
   }
 
+  get error_code() {
+    return this._error_code;
+  }
+
   async create() {
     this.valid();
-    if (this.errors) return;
+    if (this.errors) {
+      this._error_code = "INVALID_DATA";
+      return;
+    };
 
     const customerData = { customer_code: this.body.customer_code };
     const customers = knex('customers');
     const userExists: typeof customerData[] = await customers.select('*').where('customer_code', customerData.customer_code);
     if (userExists.length === 0) {
-      customers.insert(customerData);
+      await customers.insert(customerData);
+    }
+
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+    const measureAlreadyExists = await knex('measures')
+      .whereRaw('MONTH(measure_datetime) = ?', [currentMonth])
+      .andWhereRaw('YEAR(measure_datetime) = ?', [currentYear]);
+    if (measureAlreadyExists.length > 0) {
+      this._error_code = "CONFIRMATION_DUPLICATE";
+      this._errors += `Leitura do mês ${currentMonth} do ano ${currentYear} já realizada`;
+      return;
     }
 
     const fileName = `${Date.now()}.png`
@@ -37,24 +58,42 @@ class Measure {
 
     const uploadedResponse = await uploadFileToGoogleAi(imagePath, fileName);
 
-    const aiResultMeasureValue = await generateGenAiContent('Main rule: do not give text, only numbers. Give me all numbers that compose a gas meter or water meter. Get the value of the gas meter or water meter, only give me the value, nothing more, no texts, only numbers of the gas or water meter. Analyze the image and provide the numerical values displayed on the meter.', uploadedResponse);
+    const aiResultMeasureValue = await generateGenAiContent(aiMeasurePrompt, uploadedResponse);
 
-    console.log(aiResultMeasureValue);
+    const measureData = {
+      measure_uuid: uuidv4(),
+      measure_datetime: this.body.measure_datetime,
+      measure_type: this.body.measure_type,
+      measure_value: aiResultMeasureValue,
+      image_url: uploadedResponse.file.uri,
+      fk_customer_code: this.body.customer_code,
+    }
+
+    await knex('measures').insert(measureData);
+
+    const successResponse = {
+      image_url: measureData.image_url,
+      measure_value: measureData.measure_value,
+      measure_uuid: measureData.measure_uuid,
+    }
+
+    return successResponse;
   }
 
   valid() {
     let notSent = false;
     if (!this.body.image || !this.body.customer_code || !this.body.measure_datetime || !this.body.measure_type) {
       notSent = true;
-       this._errors += 'É obrigatório o envio de:'
+      this._errors += 'É obrigatório o envio de:';
     }
-    if (!this.body.image) this._errors += ' image '
+
+    if (!this.body.image) this._errors += ' image ';
     
-    if (!this.body.customer_code) this._errors += ' customer_code '
+    if (!this.body.customer_code) this._errors += ' customer_code ';
     
-    if (!this.body.measure_datetime) this._errors += ' measure_datetime '
+    if (!this.body.measure_datetime) this._errors += ' measure_datetime ';
     
-    if (!this.body.measure_type) this._errors += ' measure_type '
+    if (!this.body.measure_type) this._errors += ' measure_type ';
     
     if (notSent) return;
 

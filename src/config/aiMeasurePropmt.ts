@@ -1,0 +1,1 @@
+export const aiMeasurePrompt = 'Main rule: do not give text, only numbers. Give me all numbers that compose a gas meter or water meter. Get the value of the gas meter or water meter, only give me the value, nothing more, no texts, only numbers of the gas or water meter. Analyze the image and provide the numerical values displayed on the meter.';

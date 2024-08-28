@@ -41,14 +41,16 @@ class Measure {
       await customers.insert(customerData);
     }
 
-    const currentMonth = new Date().getMonth() + 1;
-    const currentYear = new Date().getFullYear();
+    const userInformedDate = new Date(this.body.measure_datetime)
+    const monthData = userInformedDate.getMonth() + 1;
+    const yearData = userInformedDate.getFullYear();
     const measureAlreadyExists = await knex('measures')
-      .whereRaw('MONTH(measure_datetime) = ?', [currentMonth])
-      .andWhereRaw('YEAR(measure_datetime) = ?', [currentYear]);
+      .whereRaw('MONTH(measure_datetime) = ?', [monthData])
+      .andWhereRaw('YEAR(measure_datetime) = ?', [yearData])
+      .andWhere('measure_type', '=', this.body.measure_type);
     if (measureAlreadyExists.length > 0) {
-      this._error_code = "CONFIRMATION_DUPLICATE";
-      this._errors += `Leitura do mês ${currentMonth} do ano ${currentYear} já realizada`;
+      this._error_code = "DOUBLE_REPORT";
+      this._errors += `Leitura de ${this.body.measure_type.toUpperCase() === 'GAS' ? 'gás': 'água'} do mês ${monthData} do ano ${yearData} já realizada`;
       return;
     }
 

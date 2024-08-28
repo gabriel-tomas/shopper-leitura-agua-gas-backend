@@ -16,7 +16,17 @@ class MeasuresController {
       const measure = new Measure(body);
       const response = await measure.create();
       if (measure.errors) {
-        return res.status(400).json({
+        const statusCode = (): number => {
+          switch (measure.error_code) {
+            case 'INVALID_DATA':
+              return 400;
+            case 'DOUBLE_REPORT':
+              return 409;
+            default:
+              return 500;
+          }
+        }
+        return res.status(statusCode()).json({
           error_code: measure.error_code,
           error_description: measure.errors.trim()
         });
@@ -31,6 +41,8 @@ class MeasuresController {
     }
     res.send();
   }
+
+  async confirm(req: Request, res: Response) {}
 }
 
 export default new MeasuresController();

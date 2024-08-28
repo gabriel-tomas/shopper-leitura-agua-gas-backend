@@ -40,7 +40,7 @@ class App {
   }
 
   private routes(): void {
-    this.app.use('/upload', measuresRoutes);
+    this.app.use('/', measuresRoutes);
   }
 }
 

@@ -4,6 +4,7 @@ const router = Router();
 
 import measuresController from '../controllers/MeasuresController';
 
-router.post('/', measuresController.create);
+router.post('/upload', measuresController.create);
+router.patch('/confirm', measuresController.confirm);
 
 export default router;

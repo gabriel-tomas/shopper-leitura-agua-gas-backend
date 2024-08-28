@@ -39,7 +39,6 @@ class MeasuresController {
         error_description: 'Ocorreu um erro desconhecido :('
       });
     }
-    res.send();
   }
 
   async confirm(req: Request, res: Response) {}

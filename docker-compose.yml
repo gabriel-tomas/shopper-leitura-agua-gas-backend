@@ -19,7 +19,7 @@ services:
     image: node:18-alpine
     container_name: app-container
     working_dir: /app
-    command: sh -c "npm i && npm run migrate && npm run dev"
+    command: sh -c "apk update && apk add bash && apk add --no-cache curl && chmod +x ./wait-for-db.sh && ./wait-for-db.sh db:3306 -- npm i && npm run migrate && npm run dev"
     volumes:
       - .:/app
       - /app/node_modules

@@ -13,6 +13,7 @@ import { validateBase64 } from "../utils/validateBase64";
 import { MeasureBody } from "../controllers/MeasuresController";
 import { aiMeasurePrompt } from "../config/aiMeasurePropmt";
 
+
 class Measure {
   private _errors: string = '';
   private _error_code: string = '';
@@ -82,7 +83,7 @@ class Measure {
     return successResponse;
   }
 
-  valid() {
+  private valid() {
     let notSent = false;
     if (!this.body.image || !this.body.customer_code || !this.body.measure_datetime || !this.body.measure_type) {
       notSent = true;

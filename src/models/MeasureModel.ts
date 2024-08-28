@@ -9,6 +9,7 @@ import {  uploadFileToGoogleAi } from "../config/googleAiFileManager";
 import { isValidDateTime } from "../utils/isValidDateTime";
 import { generateGenAiContent } from "../utils/generateGenAiContent";
 import { validateBase64 } from "../utils/validateBase64";
+import { toNumericString } from "../utils/toNumericString";
 
 import { MeasureBody } from "../controllers/MeasuresController";
 import { aiMeasurePrompt } from "../config/aiMeasurePropmt";
@@ -48,7 +49,8 @@ class Measure {
     const measureAlreadyExists = await knex('measures')
       .whereRaw('MONTH(measure_datetime) = ?', [monthData])
       .andWhereRaw('YEAR(measure_datetime) = ?', [yearData])
-      .andWhere('measure_type', '=', this.body.measure_type);
+      .andWhere('measure_type', '=', this.body.measure_type)
+      .andWhere('fk_customer_code', '=', this.body.customer_code);
     if (measureAlreadyExists.length > 0) {
       this._error_code = "DOUBLE_REPORT";
       this._errors += `Leitura de ${this.body.measure_type.toUpperCase() === 'GAS' ? 'gás': 'água'} do mês ${monthData} do ano ${yearData} já realizada`;
@@ -67,7 +69,7 @@ class Measure {
       measure_uuid: uuidv4(),
       measure_datetime: this.body.measure_datetime,
       measure_type: this.body.measure_type,
-      measure_value: aiResultMeasureValue,
+      measure_value: toNumericString(aiResultMeasureValue),
       image_url: uploadedResponse.file.uri,
       fk_customer_code: this.body.customer_code,
     }

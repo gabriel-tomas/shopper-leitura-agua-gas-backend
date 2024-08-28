@@ -3,11 +3,11 @@ import { resolve } from 'path';
 import express, { Application } from 'express'; 
 import helmet from 'helmet';
 import knexFile from '../knexfile';
-import knex from 'knex';
+import knexConfig from 'knex';
 
 dotenv.config({ path: resolve(__dirname, '..', '.env') });
 
-export const knexMySQL = knex(knexFile);
+export const knex = knexConfig(knexFile);
 
 import measuresRoutes from './routes/measures';
 
@@ -22,7 +22,7 @@ class App {
   }
 
   private databaseConnection(): void {
-    knexMySQL.raw("SELECT 1").then(() => {
+    knex.raw("SELECT 1").then(() => {
       console.log('Conexão com DB obtida com sucesso!');
       this.app.emit('database_connected');
     })
@@ -40,7 +40,7 @@ class App {
   }
 
   private routes(): void {
-    this.app.use(measuresRoutes);
+    this.app.use('/upload', measuresRoutes);
   }
 }
 

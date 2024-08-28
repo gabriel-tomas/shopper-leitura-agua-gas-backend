@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { resolve } from 'path';
-import express, { Application, Request, Response } from 'express'; 
+import express, { Application } from 'express'; 
 import helmet from 'helmet';
 import knexFile from '../knexfile';
 import knex from 'knex';
@@ -8,6 +8,8 @@ import knex from 'knex';
 dotenv.config({ path: resolve(__dirname, '..', '.env') });
 
 export const knexMySQL = knex(knexFile);
+
+import measuresRoutes from './routes/measures';
 
 class App {
   public app: Application;
@@ -38,9 +40,7 @@ class App {
   }
 
   private routes(): void {
-    this.app.use('/', (req: Request, res: Response) => {
-      res.send('oi');
-    });
+    this.app.use(measuresRoutes);
   }
 }
 

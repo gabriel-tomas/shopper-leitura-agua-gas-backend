@@ -15,5 +15,16 @@ services:
       - '3306'
     volumes:
       - ~/.MySQLDBData/mysqlonly/mysql_knex/lib/mysql
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    command: sh -c "npm run migrate && npm run dev"
 volumes:
   my-db:

@@ -6,8 +6,9 @@ import path from "path";
 export default {
   client: 'mysql2',
   connection: {
+    host: 'db',
     database: 'db',
-    user:     'user',
+    user:     'username',
     password: 'password'
   },
   pool: {

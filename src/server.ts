@@ -1,6 +1,6 @@
 import app from './app';
 
-const port =  3000 || process.env.APP_PORT;
+const port =  3000;
 
 app.on('database_connected', () => {
   app.listen(port, () => {

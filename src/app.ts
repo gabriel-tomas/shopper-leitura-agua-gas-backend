@@ -10,6 +10,7 @@ dotenv.config({ path: resolve(__dirname, '..', '.env') });
 export const knex = knexConfig(knexFile);
 
 import measuresRoutes from './routes/measures';
+import customerRoutes from './routes/customer';
 
 class App {
   public app: Application;
@@ -41,6 +42,7 @@ class App {
 
   private routes(): void {
     this.app.use('/', measuresRoutes);
+    this.app.use('/', customerRoutes);
   }
 }
 

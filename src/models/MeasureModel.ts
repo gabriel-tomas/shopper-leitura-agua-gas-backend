@@ -101,7 +101,7 @@ class Measure {
     if (notSent) return;
 
     if (!validateBase64(this.body.image)) this._errors += ' image deve estar em base64 com uri (exemplo: data:image/png;base64,iVBORw...). ';
-    if(this.body.customer_code.length < 3) this._errors += ' customer_code deve ter pelo menos 3 caracteres. ';
+    if(typeof this.body.customer_code !== 'string') this._errors += ' customer_code deve ser uma string. ';
     if (!isValidDateTime(this.body.measure_datetime)) this._errors += ' measure_datetime deve estar no padrão `YYYY-MM-DD HH:MM:SS`. ';
     if (!(this.body.measure_type.toUpperCase() === "WATER" || this.body.measure_type.toUpperCase() === "GAS")) this._errors += ' measure_type deve ter o valor `WATER` ou `GAS`';
   }

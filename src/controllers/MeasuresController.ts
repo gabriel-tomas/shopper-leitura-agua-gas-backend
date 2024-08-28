@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import Measure from '../models/MeasureModel';
-import MeasureConfirm from '../models/MeasureConfirm';
+import MeasureConfirm from '../models/MeasureConfirmModel';
 
 export type MeasureBody = {
   image: string;

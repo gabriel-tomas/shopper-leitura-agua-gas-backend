@@ -6,6 +6,8 @@ Imagem de teste convertida para base64:
 
 ![Shopper backend](https://github.com/gabriel-tomas/shopper-leitura-agua-gas-backend/blob/main/assets/imagetest.jpg?raw=true)
 
+Exemplo funcionando:
+
 ![Shopper backend](https://github.com/gabriel-tomas/shopper-leitura-agua-gas-backend/blob/main/assets/usage.gif?raw=true)
 
 Para iniciar tudo:

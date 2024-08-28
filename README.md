@@ -10,8 +10,6 @@ Exemplo funcionando:
 
 ![Shopper backend](https://github.com/gabriel-tomas/shopper-leitura-agua-gas-backend/blob/main/assets/usage.gif?raw=true)
 
-**Arquivos base64 muito grandes não vão funcionar**
-
 Para iniciar tudo:
 ```
 sudo docker-compose up

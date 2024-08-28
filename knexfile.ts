@@ -8,7 +8,7 @@ export default {
   connection: {
     host: 'db',
     database: 'db',
-    user:     'username',
+    user: 'username',
     password: 'password'
   },
   pool: {

@@ -1,4 +1,4 @@
-import { isUUID } from "validator";
+import { isInt, isUUID } from "validator";
 
 import { knex } from "../app";
 
@@ -76,7 +76,7 @@ class MeasureConfirm {
     if (notSent) return;
 
     if (!isUUID(this.body.measure_uuid)) this._errors += ' measure_uuid deve seguir o padrão UUID (exemplo: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).';
-    if ((typeof this.body.confirmed_value !== 'number')) this._errors += ' confirmed_value deve ser somente números';
+    if (!isInt(this.body.confirmed_value)) this._errors += ' confirmed_value deve ser somente números';
   }
 }
 

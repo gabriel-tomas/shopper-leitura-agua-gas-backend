@@ -12,7 +12,7 @@ export type MeasureBody = {
 
 export type MeasureConfirmBody = {
   measure_uuid: string;
-  confirmed_value: number;
+  confirmed_value: string;
 }
 
 class MeasuresController {

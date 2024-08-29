@@ -75,8 +75,8 @@ class MeasureConfirm {
     
     if (notSent) return;
 
-    if (!isUUID(this.body.measure_uuid)) this._errors += ' measure_uuid deve seguir o padrão UUID (exemplo: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).';
-    if (!isInt(this.body.confirmed_value)) this._errors += ' confirmed_value deve ser somente números';
+    if (typeof this.body.measure_uuid !== 'string' || !isUUID(this.body.measure_uuid)) this._errors += ' measure_uuid deve seguir o padrão UUID (exemplo: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).';
+    if (typeof this.body.confirmed_value !== 'string' || !isInt(this.body.confirmed_value)) this._errors += ' confirmed_value deve ser somente números tipo string';
   }
 }
 

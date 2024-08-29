@@ -22,6 +22,7 @@ docker-compose up
 ## O que usei 
 - Node.Js
 - TypeScript
+- Express
 - Knex (SQL query builder)
 - MariaDB (estava utilizando no Docker a imagem MySQL 5.7, porém troquei para MariaDB. imagem MySQL 5.7 estava com uns problemas, dando problema de timeout ao ser construido no Docker)
 

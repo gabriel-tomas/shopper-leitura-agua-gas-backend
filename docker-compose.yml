@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   db:
-    image: mysql:5.7
+    image: mariadb
     restart: always
     environment:
       MYSQL_DATABASE: 'db'
@@ -13,16 +13,11 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - my-db:/var/lib/mysql
+      - my-db:/var/lib/mariadb
 
   app:
-    image: node:18-alpine
+    build: .
     container_name: app-container
-    working_dir: /app
-    command: sh -c "apk update && apk add bash && apk add --no-cache curl && chmod +x ./wait-for-db.sh && ./wait-for-db.sh db:3306 -- npm i && npm run migrate && npm run dev"
-    volumes:
-      - .:/app
-      - /app/node_modules
     ports:
       - "3000:3000"
     depends_on:

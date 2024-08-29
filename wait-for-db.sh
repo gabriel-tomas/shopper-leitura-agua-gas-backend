@@ -16,10 +16,10 @@ shift 2
 cmd="$@"
 
 until nc -z "$host" "$port"; do
-  >&2 echo -e "${YELLOW}Esperando conexão com banco de dados MySQL...${NC}"
+  >&2 echo -e "${YELLOW}Esperando conexão com banco de dados MariaDB...${NC}"
   clear
   sleep 1
 done
 
->&2 echo -e "${GREEN}Banco de dados MySQL está pronto. Executando App...${NC}"
+>&2 echo -e "${GREEN}Banco de dados MariaDB está pronto. Executando App...${NC}"
 exec $cmd

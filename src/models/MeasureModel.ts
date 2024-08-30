@@ -68,7 +68,7 @@ class Measure {
     const measureData = {
       measure_uuid: uuidv4(),
       measure_datetime: this.body.measure_datetime,
-      measure_type: this.body.measure_type,
+      measure_type: this.body.measure_type.toUpperCase(),
       measure_value: toNumericString(aiResultMeasureValue),
       image_url: uploadedResponse.file.uri,
       fk_customer_code: this.body.customer_code,

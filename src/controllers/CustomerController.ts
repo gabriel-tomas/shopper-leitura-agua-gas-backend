@@ -6,7 +6,7 @@ import CustomerList from '../models/CustomerListModel';
 class CustomerController {
   async show(req: Request, res: Response) {
     const { customercode } = req.params;
-    const measuretype = get(req, 'query.measure_type', undefined) as | string[] | string | undefined;
+    const measuretype = get(req, 'query.measure_type', undefined) as string | string[] | undefined;
     try {
       const customer = new CustomerList(customercode, measuretype);
       const response = await customer.list();

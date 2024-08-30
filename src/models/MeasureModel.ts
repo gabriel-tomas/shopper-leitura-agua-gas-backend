@@ -86,6 +86,7 @@ class Measure {
   }
 
   private valid() {
+    this.cleanUp();
     let notSent = false;
     if (!this.body.image || !this.body.customer_code || !this.body.measure_datetime || !this.body.measure_type) {
       notSent = true;
@@ -106,6 +107,15 @@ class Measure {
     if(typeof this.body.customer_code !== 'string') this._errors += ' customer_code deve ser uma string. ';
     if (typeof this.body.measure_datetime !== 'string' || !isValidDateTime(this.body.measure_datetime)) this._errors += ' measure_datetime deve estar no padrão `YYYY-MM-DD HH:MM:SS`. ';
     if (typeof this.body.measure_type !== 'string' || !(this.body.measure_type.toUpperCase() === "WATER" || this.body.measure_type.toUpperCase() === "GAS")) this._errors += ' measure_type deve ter o valor `WATER` ou `GAS`';
+  }
+
+  private cleanUp() {
+    (Object.keys(this.body) as (keyof typeof this.body)[]).forEach((key) => {
+      const value = this.body[key];
+      if (typeof value === 'string') {
+        (this.body as any)[key] = value.trim();
+      }
+    });
   }
 }
 
